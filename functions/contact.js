@@ -14,7 +14,8 @@ export async function onRequestPost(context) {
       });
     }
 
-    const resendResponse = await fetch('https://api.resend.com/emails', {
+    // Send notification to Ryan
+    const notificationEmail = fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${context.env.RESEND_API_KEY}`,
@@ -35,12 +36,52 @@ export async function onRequestPost(context) {
       })
     });
 
-    if (!resendResponse.ok) {
-      console.error('Resend error:', await resendResponse.text());
+    // Send confirmation to the customer
+    const confirmationEmail = fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${context.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Milne Masonry <noreply@milnemasonry.com>',
+        to: email,
+        subject: 'Thanks for reaching out - Milne Masonry',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1a1d23;">Thanks for reaching out, ${name}!</h2>
+            <p style="color: #4b5563; line-height: 1.6;">
+              We received your message and will get back to you within 24 hours.
+            </p>
+            <p style="color: #4b5563; line-height: 1.6;">
+              If your project is urgent, feel free to give us a call at <a href="tel:5036586444" style="color: #3b82f6;">503.658.6444</a>.
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
+            <p style="color: #6b7280; font-size: 14px;">
+              <strong>Milne Masonry</strong><br>
+              14489 SE Hwy 212, Clackamas, OR 97015<br>
+              <a href="tel:5036586444" style="color: #3b82f6;">503.658.6444</a> ·
+              <a href="mailto:ryan@milnemasonry.com" style="color: #3b82f6;">ryan@milnemasonry.com</a>
+            </p>
+          </div>
+        `
+      })
+    });
+
+    // Send both emails in parallel
+    const [notificationRes, confirmationRes] = await Promise.all([notificationEmail, confirmationEmail]);
+
+    if (!notificationRes.ok) {
+      console.error('Notification email error:', await notificationRes.text());
       return new Response(JSON.stringify({ error: 'Failed to send email' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
+    }
+
+    // Log confirmation email errors but don't fail the request
+    if (!confirmationRes.ok) {
+      console.error('Confirmation email error:', await confirmationRes.text());
     }
 
     return new Response(JSON.stringify({ success: true }), {
