@@ -4,7 +4,7 @@
   "private": true,
   "description": "Milne Masonry marketing site",
   "scripts": {
-    "build:css": "tailwindcss -i ./src/input.css -o ./styles.css --minify",
+    "build:css": "node scripts/build-css.mjs",
     "watch:css": "tailwindcss -i ./src/input.css -o ./styles.css --watch"
   },
   "devDependencies": {

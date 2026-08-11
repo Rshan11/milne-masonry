@@ -27,9 +27,17 @@ npm install      # first time only
 npm run build:css
 ```
 
-Then commit both `index.html` and `styles.css` together.
+Then commit both `index.html` and `styles.css` together — the build stamps a
+content hash onto the stylesheet link (`/styles.css?v=2f1903cf`), so the two
+files must ship in the same commit.
 
-While editing, `npm run watch:css` rebuilds automatically on every save.
+That stamp matters: Cloudflare caches static assets for 4 hours and ignores any
+attempt to shorten that from `_headers`, while `index.html` revalidates on every
+load. Without a URL that changes with the content, a deploy can serve new markup
+against a stale stylesheet and newly added classes come out unstyled.
+
+While editing, `npm run watch:css` rebuilds automatically on every save — but it
+does not restamp the link, so finish with `npm run build:css` before committing.
 
 Colors and fonts are defined in `tailwind.config.js`, not in `index.html`.
 
