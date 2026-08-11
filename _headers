@@ -5,6 +5,7 @@
 # back as a cheap 304.
 /styles.css
   Cache-Control: public, max-age=0, must-revalidate
+  X-Rule-Probe: styles-rule-matched
 
 # Photos are content-addressed by name and effectively never change.
 /photos/*
