@@ -7,6 +7,9 @@
         <meta name="description" content="Commercial masonry contractor serving Oregon since 1997. Light commercial, remodels, TI projects, and repairs that grow. Prepared for what drawings don't show. CCB #120098." />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://milnemasonry.com" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="theme-color" content="#1a1d23" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
@@ -104,7 +107,7 @@
                   "name": "How long has Milne Masonry been in business?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Milne Masonry has been doing commercial masonry since 1997—over 27 years of light commercial and restoration work across the Pacific Northwest and Mountain West."
+                    "text": "Milne Masonry has been doing commercial masonry since 1997—more than a quarter century of light commercial and restoration work across the Pacific Northwest and Mountain West."
                   }
                 },
                 {
@@ -127,38 +130,6 @@
             href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
             rel="stylesheet"
         />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            gunmetal: {
-                                900: "#1a1d23",
-                                800: "#22262e",
-                                700: "#2d323c",
-                                600: "#3d4455",
-                                500: "#4d566a",
-                            },
-                            accent: {
-                                blue: "#3b82f6",
-                                blueDark: "#2563eb",
-                                blueLight: "#60a5fa",
-                            },
-                            warm: {
-                                50: "#faf9f7",
-                                100: "#f5f3f0",
-                                200: "#e8e4de",
-                            },
-                        },
-                        fontFamily: {
-                            syne: ["Syne", "sans-serif"],
-                            inter: ["Inter", "sans-serif"],
-                        },
-                    },
-                },
-            };
-        </script>
         <style>
             html {
                 scroll-behavior: smooth;
@@ -583,11 +554,37 @@
                 font-variant-numeric: tabular-nums;
             }
 
+            /* FAQ disclosure items */
+            .faq-item summary::-webkit-details-marker {
+                display: none;
+            }
+
+            .faq-item .faq-marker {
+                transition: transform 0.3s ease;
+            }
+
+            .faq-item[open] .faq-marker {
+                transform: rotate(45deg);
+            }
+
             /* Respect reduced motion preference */
             @media (prefers-reduced-motion: reduce) {
                 [data-reveal] {
                     opacity: 1;
                     transform: none;
+                    transition: none;
+                }
+                /* opacity-0 is the base state these elements animate out of,
+                   so it must be overridden when the animation is suppressed. */
+                .fade-in {
+                    animation: none;
+                    opacity: 1 !important;
+                    transform: none;
+                }
+                .floating-shape {
+                    animation: none;
+                }
+                .faq-item .faq-marker {
                     transition: none;
                 }
                 .image-reveal::after {
@@ -601,6 +598,11 @@
                 }
             }
         </style>
+
+        <!-- Tailwind is prebuilt into styles.css. If you change any class
+             names in this file, regenerate it with: npm run build:css
+             (colors/fonts live in tailwind.config.js) -->
+        <link rel="stylesheet" href="/styles.css" />
     </head>
     <body class="bg-warm-50 font-inter text-gunmetal-900 antialiased">
         <!-- Scroll Progress Bar -->
@@ -614,7 +616,7 @@
                 class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
             >
                 <a
-                    href="#"
+                    href="/"
                     class="font-syne font-bold text-xl text-white tracking-tight group flex items-center gap-2"
                 >
                     <span
@@ -634,17 +636,95 @@
                         >Our Approach</a
                     >
                     <a
+                        href="#faq"
+                        class="link-underline text-sm text-gray-400 hover:text-white transition-colors"
+                        >FAQ</a
+                    >
+                    <a
                         href="#contact"
                         class="link-underline text-sm text-gray-400 hover:text-white transition-colors"
                         >Contact</a
                     >
                 </div>
-                <a
-                    href="#contact"
-                    class="btn-shine btn-arrow bg-accent-blue hover:bg-accent-blueDark text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
-                >
-                    Let's Talk
-                </a>
+                <div class="flex items-center gap-3">
+                    <a
+                        href="#contact"
+                        class="btn-shine btn-arrow bg-accent-blue hover:bg-accent-blueDark text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+                    >
+                        Let's Talk
+                    </a>
+                    <button
+                        type="button"
+                        id="menu-toggle"
+                        class="md:hidden w-10 h-10 -mr-2 flex items-center justify-center text-gray-300 hover:text-white transition-colors"
+                        aria-label="Open menu"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                    >
+                        <svg
+                            id="menu-icon-open"
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 7h16M4 12h16M4 17h16"
+                            />
+                        </svg>
+                        <svg
+                            id="menu-icon-close"
+                            class="w-6 h-6 hidden"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 6l12 12M18 6L6 18"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div
+                id="mobile-menu"
+                class="hidden md:hidden border-t border-white/5 bg-gunmetal-900/95 backdrop-blur-sm"
+            >
+                <div class="px-6 py-4 flex flex-col">
+                    <a
+                        href="#work"
+                        class="py-3 text-gray-300 hover:text-white transition-colors"
+                        >Our Work</a
+                    >
+                    <a
+                        href="#approach"
+                        class="py-3 text-gray-300 hover:text-white transition-colors"
+                        >Our Approach</a
+                    >
+                    <a
+                        href="#faq"
+                        class="py-3 text-gray-300 hover:text-white transition-colors"
+                        >FAQ</a
+                    >
+                    <a
+                        href="#contact"
+                        class="py-3 text-gray-300 hover:text-white transition-colors"
+                        >Contact</a
+                    >
+                    <a
+                        href="tel:5036586444"
+                        class="py-3 text-accent-blueLight font-medium"
+                        >503.658.6444</a
+                    >
+                </div>
             </div>
         </nav>
 
@@ -692,6 +772,10 @@
                                 src="photos/robert-libke-police-station-brick-arch-monument.webp"
                                 alt="Robert Libke Police Station brick arch monument built by Milne Masonry"
                                 class="w-full h-full object-cover"
+                                width="1000"
+                                height="667"
+                                loading="eager"
+                                decoding="async"
                             />
                             <div class="absolute inset-0 bg-gradient-to-t from-gunmetal-900/60 via-transparent to-transparent"></div>
                             <div class="absolute bottom-4 left-4">
@@ -727,7 +811,7 @@
                             <span
                                 class="counter-value text-xl font-bold text-accent-blue"
                                 data-counter
-                                data-target="27"
+                                data-since="1997"
                                 data-suffix="+"
                                 >0+</span
                             >
@@ -846,6 +930,10 @@
                             src="photos/robert-libke-police-station-brick-arch-monument.webp"
                             alt="Robert Libke Police Station brick arch monument"
                             class="w-full h-full object-cover"
+                            width="1000"
+                            height="667"
+                            loading="lazy"
+                            decoding="async"
                         />
                         <div
                             class="absolute bottom-4 left-4 right-4 opacity-0 hover:opacity-100 transition-opacity duration-300"
@@ -984,12 +1072,16 @@
                         data-reveal-delay="1"
                     >
                         <div
-                            class="aspect-[4/3] bg-gunmetal-200 relative overflow-hidden image-reveal"
+                            class="aspect-[4/3] bg-warm-200 relative overflow-hidden image-reveal"
                         >
                             <img
                                 src="photos/university-of-oregon-huestis-hall-restoration.webp"
                                 alt="University of Oregon Huestis Hall brick restoration"
                                 class="w-full h-full object-cover"
+                                width="1170"
+                                height="1560"
+                                loading="lazy"
+                                decoding="async"
                             />
                             <div
                                 class="project-card-overlay flex items-end p-4"
@@ -1021,12 +1113,16 @@
                         data-reveal-delay="2"
                     >
                         <div
-                            class="aspect-[4/3] bg-gunmetal-200 relative overflow-hidden image-reveal"
+                            class="aspect-[4/3] bg-warm-200 relative overflow-hidden image-reveal"
                         >
                             <img
                                 src="photos/pearl-apartments-scaffold-brick-wall.webp"
                                 alt="Pearl Apartments scaffold brick wall installation"
                                 class="w-full h-full object-cover"
+                                width="1000"
+                                height="750"
+                                loading="lazy"
+                                decoding="async"
                             />
                             <div
                                 class="project-card-overlay flex items-end p-4"
@@ -1058,12 +1154,16 @@
                         data-reveal-delay="3"
                     >
                         <div
-                            class="aspect-[4/3] bg-gunmetal-200 relative overflow-hidden image-reveal"
+                            class="aspect-[4/3] bg-warm-200 relative overflow-hidden image-reveal"
                         >
                             <img
                                 src="photos/alberta-commons-structural-brick.webp"
                                 alt="Alberta Commons structural brick with intricate designs"
                                 class="w-full h-full object-cover"
+                                width="1500"
+                                height="1000"
+                                loading="lazy"
+                                decoding="async"
                             />
                             <div
                                 class="project-card-overlay flex items-end p-4"
@@ -1526,6 +1626,18 @@
                     >
                         <!-- Contact Form -->
                         <form id="contact-form" class="space-y-5">
+                            <!-- Honeypot: hidden from people, catches bots -->
+                            <div class="hidden" aria-hidden="true">
+                                <label for="website">Website</label>
+                                <input
+                                    type="text"
+                                    id="website"
+                                    name="website"
+                                    tabindex="-1"
+                                    autocomplete="off"
+                                />
+                            </div>
+
                             <div>
                                 <label
                                     for="name"
@@ -1627,6 +1739,8 @@
                         <div
                             id="success-message"
                             class="hidden text-center py-8"
+                            role="status"
+                            aria-live="polite"
                         >
                             <div
                                 class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
@@ -1660,13 +1774,121 @@
                         <div
                             id="error-message"
                             class="hidden mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg"
+                            role="alert"
+                            aria-live="assertive"
                         >
-                            <p class="text-red-400 text-sm text-center">
+                            <p
+                                id="error-text"
+                                class="text-red-400 text-sm text-center"
+                            >
                                 Something went wrong. Please try again or call
                                 us directly.
                             </p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="py-24 bg-warm-50">
+            <div class="max-w-3xl mx-auto px-6">
+                <div class="flex items-center gap-3 mb-4" data-reveal>
+                    <div class="w-12 h-[2px] bg-accent-blue"></div>
+                    <p
+                        class="text-accent-blue font-medium text-sm tracking-wide uppercase"
+                    >
+                        Common Questions
+                    </p>
+                </div>
+                <h2
+                    class="font-syne font-bold text-3xl md:text-4xl text-gunmetal-900 mb-12"
+                    data-reveal
+                >
+                    Questions we get asked
+                </h2>
+
+                <div class="space-y-4">
+                    <details
+                        class="faq-item bg-white rounded-xl subtle-border p-6"
+                        data-reveal
+                        data-reveal-delay="1"
+                    >
+                        <summary
+                            class="font-syne font-semibold text-lg text-gunmetal-900 cursor-pointer list-none flex items-center justify-between gap-4"
+                        >
+                            What types of commercial masonry work does Milne
+                            Masonry handle?
+                            <span class="faq-marker text-accent-blue text-2xl leading-none flex-shrink-0">+</span>
+                        </summary>
+                        <p class="text-gunmetal-600 leading-relaxed mt-4">
+                            Milne Masonry handles light commercial new
+                            construction, tenant improvements, remodels and
+                            additions, masonry repairs, and restoration work. We
+                            specialize in jobs with unknown conditions—where
+                            what's behind the wall isn't what the drawings show.
+                        </p>
+                    </details>
+
+                    <details
+                        class="faq-item bg-white rounded-xl subtle-border p-6"
+                        data-reveal
+                        data-reveal-delay="2"
+                    >
+                        <summary
+                            class="font-syne font-semibold text-lg text-gunmetal-900 cursor-pointer list-none flex items-center justify-between gap-4"
+                        >
+                            Where does Milne Masonry work?
+                            <span class="faq-marker text-accent-blue text-2xl leading-none flex-shrink-0">+</span>
+                        </summary>
+                        <p class="text-gunmetal-600 leading-relaxed mt-4">
+                            Milne Masonry is based in Clackamas, Oregon and is
+                            licensed in Oregon (CCB #120098), Washington
+                            (MILNEMI032J5), Montana (#277030), and Wyoming
+                            (2024-001467862).
+                        </p>
+                    </details>
+
+                    <details
+                        class="faq-item bg-white rounded-xl subtle-border p-6"
+                        data-reveal
+                        data-reveal-delay="3"
+                    >
+                        <summary
+                            class="font-syne font-semibold text-lg text-gunmetal-900 cursor-pointer list-none flex items-center justify-between gap-4"
+                        >
+                            How long has Milne Masonry been in business?
+                            <span class="faq-marker text-accent-blue text-2xl leading-none flex-shrink-0">+</span>
+                        </summary>
+                        <p class="text-gunmetal-600 leading-relaxed mt-4">
+                            Milne Masonry has been doing commercial masonry
+                            since 1997—more than a quarter century of light
+                            commercial and restoration work across the Pacific
+                            Northwest and Mountain West.
+                        </p>
+                    </details>
+
+                    <details
+                        class="faq-item bg-white rounded-xl subtle-border p-6"
+                        data-reveal
+                        data-reveal-delay="4"
+                    >
+                        <summary
+                            class="font-syne font-semibold text-lg text-gunmetal-900 cursor-pointer list-none flex items-center justify-between gap-4"
+                        >
+                            How does Milne Masonry handle scope changes and
+                            unknown conditions?
+                            <span class="faq-marker text-accent-blue text-2xl leading-none flex-shrink-0">+</span>
+                        </summary>
+                        <p class="text-gunmetal-600 leading-relaxed mt-4">
+                            We investigate before we price. When conditions
+                            change mid-project, we communicate immediately with
+                            documentation—not excuses. Our process is built
+                            around early problem identification, clear scope
+                            change communication, and keeping projects on
+                            schedule.
+                        </p>
+                    </details>
                 </div>
             </div>
         </section>
@@ -1746,6 +1968,22 @@
                             successMsg.classList.remove("hidden");
                             form.reset();
                         } else {
+                            // Only surface the server's own wording for the
+                            // cases a visitor can act on. Everything else
+                            // keeps the generic fallback.
+                            if (
+                                response.status === 429 ||
+                                response.status === 400
+                            ) {
+                                const detail = await response
+                                    .json()
+                                    .catch(() => null);
+                                if (detail && detail.error) {
+                                    document.getElementById(
+                                        "error-text",
+                                    ).textContent = detail.error;
+                                }
+                            }
                             errorMsg.classList.remove("hidden");
                         }
                     } catch (error) {
@@ -1758,6 +1996,43 @@
                         btnIcon.classList.remove("animate-spin");
                     }
                 });
+        </script>
+
+        <!-- Mobile Menu -->
+        <script>
+            (() => {
+                const toggle = document.getElementById("menu-toggle");
+                const menu = document.getElementById("mobile-menu");
+                const iconOpen = document.getElementById("menu-icon-open");
+                const iconClose = document.getElementById("menu-icon-close");
+
+                function setOpen(open) {
+                    menu.classList.toggle("hidden", !open);
+                    iconOpen.classList.toggle("hidden", open);
+                    iconClose.classList.toggle("hidden", !open);
+                    toggle.setAttribute("aria-expanded", String(open));
+                    toggle.setAttribute(
+                        "aria-label",
+                        open ? "Close menu" : "Open menu",
+                    );
+                }
+
+                toggle.addEventListener("click", () => {
+                    setOpen(menu.classList.contains("hidden"));
+                });
+
+                // Close after tapping a link, and on Escape
+                menu.querySelectorAll("a").forEach((link) => {
+                    link.addEventListener("click", () => setOpen(false));
+                });
+
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape" && !menu.classList.contains("hidden")) {
+                        setOpen(false);
+                        toggle.focus();
+                    }
+                });
+            })();
         </script>
 
         <!-- Scroll Animations & Effects -->
@@ -1825,10 +2100,12 @@
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
-                            const target = parseInt(
-                                entry.target.dataset.target,
-                                10,
-                            );
+                            // data-since counts years elapsed so the figure
+                            // never goes stale; data-target is a fixed number.
+                            const since = entry.target.dataset.since;
+                            const target = since
+                                ? new Date().getFullYear() - parseInt(since, 10)
+                                : parseInt(entry.target.dataset.target, 10);
                             animateCounter(entry.target, target);
                             counterObserver.unobserve(entry.target);
                         }
